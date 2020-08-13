@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\:
+    resource: '../../ConfigElementType/*'
+    tags: ['huh.reader.config_element_type']
