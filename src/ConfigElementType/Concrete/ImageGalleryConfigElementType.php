@@ -1,13 +1,10 @@
 <?php
-/**
- * Contao Open Source CMS
- *
+
+/*
  * Copyright (c) 2020 Heimrich & Hannot GmbH
  *
- * @author  Thomas Körner <t.koerner@heimrich-hannot.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @license LGPL-3.0-or-later
  */
-
 
 namespace HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\Concrete;
 
@@ -15,10 +12,7 @@ use Contao\FilesModel;
 use Contao\StringUtil;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeData;
 use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
-use HeimrichHannot\ListBundle\ConfigElementType\ListConfigElementData;
-use HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementData;
 use HeimrichHannot\UtilsBundle\Image\ImageUtil;
-use InvalidArgumentException;
 
 class ImageGalleryConfigElementType implements ConfigElementTypeInterface
 {
@@ -26,7 +20,6 @@ class ImageGalleryConfigElementType implements ConfigElementTypeInterface
      * @var ImageUtil
      */
     protected $imageUtil;
-
 
     /**
      * ImageGalleryConfigElementType constructor.
@@ -52,21 +45,24 @@ class ImageGalleryConfigElementType implements ConfigElementTypeInterface
         $item = $configElementData->getItem();
 
         if (($configuration->imageSelectorField && $item->getRawValue($configuration->imageSelectorField) && $configuration->imageField && $item->getRawValue($configuration->imageField)) || (!$configuration->imageSelectorField && $configuration->imageField && $item->getRawValue($configuration->imageField))) {
-
             $multiSrc = StringUtil::deserialize($item->getRawValue($configuration->imageField));
             // Return if there are no files
-            if (empty($multiSrc) || !\is_array($multiSrc))
-            {
+            if (empty($multiSrc) || !\is_array($multiSrc)) {
                 return;
             }
 
             // Get the file entries from the database
             $images = FilesModel::findMultipleByUuids($multiSrc);
 
+            if (!$images) {
+                return;
+            }
+
             $galleryData = [];
 
             foreach ($images as $index => $filesModel) {
                 $imageArray['singleSRC'] = $filesModel->path;
+
                 if ($configuration->imgSize) {
                     $size = StringUtil::deserialize($configuration->imgSize);
 

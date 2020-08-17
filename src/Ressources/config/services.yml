@@ -5,4 +5,4 @@ services:
 
   HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\Concrete\:
     resource: '../../ConfigElementType/Concrete/*'
-    tags: ['huh.reader.config_element_type']
+    tags: ['huh.reader.config_element_type', 'huh.list.config_element_type']
