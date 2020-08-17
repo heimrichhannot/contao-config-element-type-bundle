@@ -48,13 +48,7 @@ class ImageGalleryConfigElementType implements ConfigElementTypeInterface
 
     public function applyConfiguration(ConfigElementTypeData $configElementData): void
     {
-        if ($configElementData instanceof ReaderConfigElementData) {
-            $configuration = $configElementData->getReaderConfigElement();
-        } elseif ($configElementData instanceof ListConfigElementData) {
-            $configuration = $configElementData->getListConfigElement();
-        } else {
-            throw new InvalidArgumentException("Currently only ReaderConfigElementData and ListConfigElementData are supported as argument.");
-        }
+        $configuration = $configElementData->getConfiguration();
         $item = $configElementData->getItem();
 
         if (($configuration->imageSelectorField && $item->getRawValue($configuration->imageSelectorField) && $configuration->imageField && $item->getRawValue($configuration->imageField)) || (!$configuration->imageSelectorField && $configuration->imageField && $item->getRawValue($configuration->imageField))) {
