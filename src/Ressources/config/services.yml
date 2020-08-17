@@ -4,5 +4,5 @@ services:
     autoconfigure: true
 
   HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\Concrete\:
-    resource: '../../ConfigElementType/*'
+    resource: '../../ConfigElementType/Concrete/*'
     tags: ['huh.reader.config_element_type']
