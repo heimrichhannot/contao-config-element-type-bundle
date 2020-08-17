@@ -9,10 +9,12 @@
  */
 
 
-namespace HeimrichHannot\ConfigElementTypeBundle\ConfigElementType;
+namespace HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\Concrete;
 
 use Contao\FilesModel;
 use Contao\StringUtil;
+use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeData;
+use HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\ConfigElementTypeInterface;
 use HeimrichHannot\ListBundle\ConfigElementType\ListConfigElementData;
 use HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementData;
 use HeimrichHannot\UtilsBundle\Image\ImageUtil;
@@ -44,7 +46,7 @@ class ImageGalleryConfigElementType implements ConfigElementTypeInterface
         return $prependPalette.'{config_legend},imageSelectorField,imageField,imgSize;'.$appendPalette;
     }
 
-    public function applyConfiguration($configElementData): void
+    public function applyConfiguration(ConfigElementTypeData $configElementData): void
     {
         if ($configElementData instanceof ReaderConfigElementData) {
             $configuration = $configElementData->getReaderConfigElement();

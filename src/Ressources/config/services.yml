@@ -3,6 +3,6 @@ services:
     autowire: true
     autoconfigure: true
 
-  HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\:
+  HeimrichHannot\ConfigElementTypeBundle\ConfigElementType\Concrete\:
     resource: '../../ConfigElementType/*'
     tags: ['huh.reader.config_element_type']

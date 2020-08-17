@@ -30,7 +30,7 @@ interface ConfigElementTypeInterface
     /**
      * Update the item data.
      *
-     * @param ReaderConfigElementData|ListConfigElementData $configElementData
+     * @param ConfigElementTypeData $configElementData
      */
-    public function applyConfiguration($configElementData): void;
+    public function applyConfiguration(ConfigElementTypeData $configElementData): void;
 }
