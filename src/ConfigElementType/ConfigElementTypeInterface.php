@@ -8,9 +8,6 @@
 
 namespace HeimrichHannot\ConfigElementTypeBundle\ConfigElementType;
 
-use HeimrichHannot\ListBundle\ConfigElementType\ListConfigElementData;
-use HeimrichHannot\ReaderBundle\ConfigElementType\ReaderConfigElementData;
-
 interface ConfigElementTypeInterface
 {
     /**
@@ -29,8 +26,6 @@ interface ConfigElementTypeInterface
 
     /**
      * Update the item data.
-     *
-     * @param ConfigElementTypeData $configElementData
      */
-    public function applyConfiguration(ConfigElementTypeData $configElementData): void;
+    public function applyConfiguration(ConfigElementData $configElementData): ConfigElementResult;
 }

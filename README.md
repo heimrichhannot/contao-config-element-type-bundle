@@ -1,4 +1,4 @@
-# Contao Config element type Bundle
+# Contao Config Element Type Bundle
 
 This bundle contains a generic interface, an generic data class and concrete independent implementations for config element types. 
 
