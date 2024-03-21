@@ -33,6 +33,8 @@ class ImageGalleryConfigElementType implements ConfigElementTypeInterface
         $configuration = $configElementData->getConfiguration();
         $itemData = $configElementData->getItemData();
 
+        $galleryData = [];
+
         if (($configuration->imageSelectorField && $itemData[$configuration->imageSelectorField] && $configuration->imageField && $itemData[$configuration->imageField]) || (!$configuration->imageSelectorField && $configuration->imageField && $itemData[$configuration->imageField])) {
             $multiSrc = StringUtil::deserialize($itemData[$configuration->imageField]);
             // Return if there are no files
@@ -57,7 +59,7 @@ class ImageGalleryConfigElementType implements ConfigElementTypeInterface
                 }
             }
 
-            $galleryData = [];
+
 
             foreach ($images as $index => $filesModel) {
                 $imageArray['singleSRC'] = $filesModel->path;
