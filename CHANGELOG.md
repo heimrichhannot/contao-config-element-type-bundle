@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.2.1] - 2024-03-21
-
+- Fixed: warnings
 
 ## [0.2.0] - 2020-08-21
 - added ConfigElementResult class
