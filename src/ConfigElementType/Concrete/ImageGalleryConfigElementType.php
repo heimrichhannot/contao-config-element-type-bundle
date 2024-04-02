@@ -39,60 +39,62 @@ class ImageGalleryConfigElementType implements ConfigElementTypeInterface
         $configuration = $configElementData->getConfiguration();
         $itemData = $configElementData->getItemData();
 
-        if ($configuration->imageSelectorField
-            && $itemData[$configuration->imageSelectorField]
-            && $configuration->imageField
-            && $itemData[$configuration->imageField]
-            or
-            !$configuration->imageSelectorField
-            && $configuration->imageField
-            && $itemData[$configuration->imageField])
+        $galleryData = [];
+
+        $emptyResult = function () {
+            return new ConfigElementResult(ConfigElementResult::TYPE_FORMATTED_VALUE, []);
+        };
+
+        if (!$configuration->imageField || !$itemData[$configuration->imageField]) {
+            return $emptyResult();
+        }
+
+        if ($configuration->imageSelectorField && !$itemData[$configuration->imageSelectorField]) {
+            return $emptyResult();
+        }
+
+        $multiSrc = StringUtil::deserialize($itemData[$configuration->imageField]);
+        // Return if there are no files
+        if (empty($multiSrc) || !\is_array($multiSrc)) {
+            return new ConfigElementResult(ConfigElementResult::TYPE_NONE, null);
+        }
+
+        // Get the file entries from the database
+        $images = FilesModel::findMultipleByUuids($multiSrc);
+
+        if (!$images) {
+            return new ConfigElementResult(ConfigElementResult::TYPE_NONE, null);
+        }
+
+        $imageSize = null;
+
+        if ($configuration->imgSize) {
+            $size = StringUtil::deserialize($configuration->imgSize);
+
+            if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2])) {
+                $imageSize = $configuration->imgSize;
+            }
+        }
+
+        foreach ($images as $filesModel)
         {
-            $multiSrc = StringUtil::deserialize($itemData[$configuration->imageField]);
-            // Return if there are no files
-            if (empty($multiSrc) || !\is_array($multiSrc)) {
-                return new ConfigElementResult(ConfigElementResult::TYPE_NONE, null);
+            $figureBuilder = $this->studio
+                ->createFigureBuilder()
+                ->fromUuid($filesModel->uuid);
+
+            if ($imageSize) {
+                $figureBuilder->setSize($imageSize);
             }
 
-            // Get the file entries from the database
-            $images = FilesModel::findMultipleByUuids($multiSrc);
+            $figure = $figureBuilder->buildIfResourceExists();
 
-            if (!$images) {
-                return new ConfigElementResult(ConfigElementResult::TYPE_NONE, null);
+            if ($figure === null) {
+                continue;
             }
 
-            $imageSize = null;
-
-            if ($configuration->imgSize) {
-                $size = StringUtil::deserialize($configuration->imgSize);
-
-                if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2])) {
-                    $imageSize = $configuration->imgSize;
-                }
-            }
-
-            $galleryData = [];
-
-            foreach ($images as $filesModel)
-            {
-                $figureBuilder = $this->studio
-                    ->createFigureBuilder()
-                    ->fromUuid($filesModel->uuid);
-
-                if ($imageSize) {
-                    $figureBuilder->setSize($imageSize);
-                }
-
-                $figure = $figureBuilder->buildIfResourceExists();
-
-                if ($figure === null) {
-                    continue;
-                }
-
-                $template = new FrontendTemplate();
-                $figure->applyLegacyTemplateData($template);
-                $galleryData[] = $template->getData();
-            }
+            $template = new FrontendTemplate();
+            $figure->applyLegacyTemplateData($template);
+            $galleryData[] = $template->getData();
         }
 
         return new ConfigElementResult(ConfigElementResult::TYPE_FORMATTED_VALUE, $galleryData);
